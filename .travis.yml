@@ -27,15 +27,12 @@ before_install:
   -  sudo pip install pylint pytest astroid isort
   # Load cached docker images
   #- if [[ -d $HOME/docker ]]; then ls $HOME/docker/*.tar.gz | xargs -I {file} sh -c "zcat {file} | docker load"; fi
+  - function timeout() { perl -e 'alarm shift; exec @ARGV' "$@"; }
 
 jobs:
   include:
-    - script: scripts/deploy_docs.sh full
+    - script: timeout 2400 scripts/deploy_docs.sh full
       name: Generate Docs
-    - script: scripts/deploy_docs.sh pybind
-      name: Cache pybind build
-    - script: scripts/deploy_docs.sh proto
-      name: Cache proto build
 
 #before_cache:
 #  # Save tagged docker images
